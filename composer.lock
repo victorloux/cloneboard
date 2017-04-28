@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "96098e473b028cdb2529580554a1ae3e",
+    "content-hash": "221f386741e9995c05a4d988bdaa6028",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -234,6 +234,55 @@
                 }
             ],
             "time": "2015-04-20T18:58:01+00:00"
+        },
+        {
+            "name": "kijin/pinboard-api",
+            "version": "0.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kijin/pinboard-api.git",
+                "reference": "7176b7e973a69d16d93e802b3eda8613d3d9ae90"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kijin/pinboard-api/zipball/7176b7e973a69d16d93e802b3eda8613d3d9ae90",
+                "reference": "7176b7e973a69d16d93e802b3eda8613d3d9ae90",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "php": ">=5.0.0"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "pinboard-api.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kijin Sung",
+                    "email": "kijin@kijinsung.com",
+                    "role": "Developer"
+                },
+                {
+                    "name": "Erin Dalzell",
+                    "email": "erin@thedalzells.org",
+                    "role": "Contributor"
+                }
+            ],
+            "description": "Pinboard API Client in PHP",
+            "homepage": "https://github.com/kijin/pinboard-api",
+            "keywords": [
+                "bookmark",
+                "pinboard"
+            ],
+            "time": "2016-11-11T07:47:13+00:00"
         },
         {
             "name": "laravel/framework",
