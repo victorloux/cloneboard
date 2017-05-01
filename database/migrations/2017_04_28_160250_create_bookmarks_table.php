@@ -16,11 +16,13 @@ class CreateBookmarksTable extends Migration
         Schema::create('bookmarks', function($table) {
             $table->increments('id');
             $table->string('pinboard_id')->unique();
-            $table->bigInteger('time_posted');
-            $table->string('title');
+            $table->dateTime('time_posted');
+            $table->mediumText('title');
             $table->mediumText('description');
             $table->mediumText('url');
             $table->boolean('starred');
+            $table->boolean('public');
+            $table->boolean('unread');
             $table->unsignedInteger('others');
             $table->timestamps();
         });

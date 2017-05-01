@@ -23,7 +23,7 @@
                             <li><a href="/tag/{{ $tag }}">{{ $tag }}</a></li>
                         @endforeach
                     </ul>
-                    <div class="url"><a href="{{ $bookmark->url }}">{{ $bookmark->url }}</a> &middot; {{ Carbon\Carbon::createFromTimeStampUTC($bookmark->timestamp)->diffForHumans() }}</div>
+                    <div class="url"><a href="{{ $bookmark->url }}">{{ $bookmark->url }}</a> &middot; {{ $bookmark->time_posted->diffForHumans() }}</div>
 
                </article>
             @endforeach
