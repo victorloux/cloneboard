@@ -11,4 +11,4 @@
 |
 */
 
-Route::get('/', 'PinboardController@show');
+Route::get('/', 'BookmarkController@show');

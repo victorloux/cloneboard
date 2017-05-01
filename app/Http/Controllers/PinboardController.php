@@ -167,18 +167,8 @@ class PinboardController extends Controller
      * @param   $offset Optional, a starting offset used for the import
      * @return Number of bookmarks updated.
      */
-    /**
-     * Fetches results for the index page and populates a view with the results
-     */
-    public function show()
     public function fullUpdate($offset = null)
     {
-        $recent = Bookmark::where('public', true)
-                    ->orderBy('time_posted', 'desc')
-                    ->take(10)
-                    ->get();
-
-        return view('list')->with(['bookmarks' => $recent]);
         $new = $this->import(null, $offset);
         return count($new);
     }
