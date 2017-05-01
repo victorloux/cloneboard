@@ -46,4 +46,13 @@ class Bookmark extends Model
         }
         return $result;
     }
+    
+    /**
+     * Strips the <blockquote> HTML of description in views
+     * @return String
+     */
+    public function getDescriptionAttribute()
+    {
+        return str_replace("<blockquote>", "", str_replace("</blockquote>", "", $this->attributes['description']));
+    }
 }
