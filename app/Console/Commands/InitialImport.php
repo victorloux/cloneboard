@@ -12,7 +12,7 @@ class InitialImport extends Command
      *
      * @var string
      */
-    protected $signature = 'import:all';
+    protected $signature = 'import:all {--offset=?}';
 
     /**
      * The console command description.
@@ -21,6 +21,9 @@ class InitialImport extends Command
      */
     protected $description = 'Import all the bookmarks at once';
 
+    /**
+     * Pinboard controller object
+     */
     protected $pb;
 
     /**
@@ -42,7 +45,8 @@ class InitialImport extends Command
     public function handle()
     {
         $this->info("Starting import...");
-        $this->pb->getAllRecords();
-        $this->info("Import complete!");
+        $updated = $this->pb->fullUpdate($this->option('offset'));
+        $this->info("Import complete! " . $updated . " bookmarks imported.");
+        $this->info("If you have more bookmarks than this please run this command again using --offset=" . $updated);
     }
 }

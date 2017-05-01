@@ -13,7 +13,6 @@ use App\Tag;
 class PinboardController extends Controller
 {
     private $pinboard;
-    const CACHE_TIME = 1800;    // half an hour
 
     /**
      * Attempts to connect to the Pinboard API
@@ -31,6 +30,7 @@ class PinboardController extends Controller
                 env('PINBOARD_USER'),
                 env('PINBOARD_USER') . ':' . env('PINBOARD_TOKEN')
             );
+            return true;
         }
         catch(\PinboardException_ConnectionError $e) {
             Log::error("Error connecting to the Pinboard API, likely due to an outage");
@@ -46,10 +46,9 @@ class PinboardController extends Controller
         }
         catch (\PinboardException $e) {
             Log::error("Error connecting to the Pinboard API", ['error' => $e]);
-            return false;
         }
 
-        return true;
+        return false;
     }
     
     /**
@@ -59,18 +58,19 @@ class PinboardController extends Controller
      * @param  integer $limit Maximum amount of bookmarks (defaults to infinite)
      * @return {Bookmark[]        Collection of updated bookmarks (may be empty)}
      */
-    public function import($since, $offset = null, $limit = null)
+    protected function import($since, $offset = null)
     {
         $this->connect();
+        $imported = [];
 
         // If a start offset is set, convert it to a UNIX timestamp
-        if ($since !== null) {
+        if ($since !== null && $since instanceof Carbon) {
             $since = $since->timestamp;
         }
 
         try {
             $new_bookmarks = $this->pinboard->get_all(
-                $limit,
+                null,
                 $offset,
                 null,
                 $since,
@@ -78,14 +78,14 @@ class PinboardController extends Controller
             );
             
             foreach ($new_bookmarks as $bookmark) {
-                $this->importSingleBookmark($bookmark);
+                $imported[] = $this->importSingleBookmark($bookmark);
             }
             
-            return $new_bookmarks;
+            return $imported;
         }
         catch(\PinboardException $e) {
-            Log:error("Error while importing bookmarks", ['error' => $e]);
-            return [];
+            Log::error("Error while importing bookmarks", ['error' => $e]);
+            return $imported;
         }
     }
 
@@ -109,7 +109,7 @@ class PinboardController extends Controller
     {
         // Ignore if record already exists
         if(!is_null(Bookmark::withoutGlobalScope('visible')->where('pinboard_id', $bookmark->hash)->first())) {
-            return;
+            return false;
         }
 
         $record = Bookmark::create([
@@ -134,29 +134,27 @@ class PinboardController extends Controller
 
     /**
      * Check whether we need to fetch updates, and if we do, go fetch them!
-     * @return {boolean} Whether we updated the database
+     * 
+     * This is accessed via `artisan import:recent`
+     * defined in app/Console/Commands/IncrementalImport.php
+     * but is normally ran as a scheduled task
+     *
+     * @return {Integer} Number of updates. May also return boolean false and an Exception if the initial import was not made.
      */
-    protected function updateIfNeeded()
+    public function incrementalUpdate()
     {
-        // If we're developing or if the cache time has expired,
-        // we'll go fetch newer updates
-        if(\App::environment('local') || Cache::get('last_update') < time() - self::CACHE_TIME) {        
-            // Get the date of the last updated record in the db,
-            // and request bookmarks newer than that
-            $latest = \DB::table('bookmarks')->max('time_posted');
+        $latest = \DB::table('bookmarks')->max('time_posted');
             
-            // If there's no latest, then perhaps we shoud run the 
-            // initial import first?
-            if($latest === null) {
-                throw new \Exception("No record in the database yet. Run `artisan import:all` first. After this initial import, bookmarks will be updated incrementally and automatically.");
-                return false;
-            }
-
-            \Cache::forever('last_update', time());
-            return true;
+        // If there's no latest, then perhaps we shoud run the 
+        // initial import first?
+        if($latest === null) {
+            throw new \Exception("No record in the database yet. Run `artisan import:all` first. After this initial import, bookmarks will be updated incrementally and automatically.");
+            return false;
         }
 
-        return false;
+        $latest = Carbon::parse($latest);
+        $new = $this->import($latest);
+        return count($new);
     }
 
     /**
@@ -165,40 +163,23 @@ class PinboardController extends Controller
      *
      * This is accessed via `artisan import:all`
      * defined in app/Console/Commands/InitialImport.php
+     *
+     * @param   $offset Optional, a starting offset used for the import
+     * @return Number of bookmarks updated.
      */
-    public function getAllRecords()
-    {
-        $this->import(null, null, null);
-        
-        // The code below might ever be needed if you have tons of bookmarks.
-        // the 'posts/all' endpoint has a rate limiting of 1 call every 5 minutes
-        // but there's no specific limit given on how many bookmarks are returned
-        // so we might have to chunk results.
-        /*
-        $resultsCount = 0;
-        $offset = null;
-        $limit = 250;
-
-        do {
-            $this->import(null, null, null);
-            $offset += $limit;
-            sleep(310); // avoid rate limit 
-        } while ($resultsCount > 0);
-        */
-    }
-
     /**
      * Fetches results for the index page and populates a view with the results
      */
     public function show()
+    public function fullUpdate($offset = null)
     {
-        $this->updateIfNeeded();
-
         $recent = Bookmark::where('public', true)
                     ->orderBy('time_posted', 'desc')
                     ->take(10)
                     ->get();
 
         return view('list')->with(['bookmarks' => $recent]);
+        $new = $this->import(null, $offset);
+        return count($new);
     }
 }

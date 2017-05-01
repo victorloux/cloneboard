@@ -13,7 +13,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
-        Commands\InitialImport::class
+        Commands\InitialImport::class,
+        Commands\IncrementalImport::class
     ];
 
     /**
@@ -24,8 +25,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->command('import:recent')
+                 ->everyTenMinutes();
     }
 
     /**
