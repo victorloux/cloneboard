@@ -20,10 +20,11 @@
 
                     <ul class="tags">
                         @foreach($bookmark->tags as $tag)
+                            <?php if($tag == 'via:popular') continue; ?>
                             <li><a href="/tag/{{ $tag }}">{{ $tag }}</a></li>
                         @endforeach
                     </ul>
-                    <div class="url"><a href="{{ $bookmark->url }}">{{ $bookmark->url }}</a> &middot; {{ $bookmark->time_posted->diffForHumans() }}</div>
+                    <div class="url"><a href="{{ $bookmark->url }}">{{ $bookmark->rootUrl }}</a> &middot; {{ $bookmark->time_posted->diffForHumans() }}</div>
 
                </article>
             @endforeach

@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use \LayerShifter\TLDExtract as TLDExtract;
 
 class Bookmark extends Model
 {
@@ -28,4 +29,21 @@ class Bookmark extends Model
 	{
 		return $this->belongsToMany('App\Tag');
 	}
+
+    /**
+     * Accessor that parses the URL to give only the full domain
+     * It uses TLDextract to accurately process domains like "co.uk"
+     * and it removes www., but will keep other subdomains
+     * @return {String The host}
+     */
+    public function getRootUrlAttribute()
+    {
+        $extract = new TLDExtract\Extract();
+        $result = $extract->parse($this->url);
+        $result = $result->getFullHost();
+        if(starts_with($result, 'www.')) {
+            $result = substr($result, 4);
+        }
+        return $result;
+    }
 }
