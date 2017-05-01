@@ -14,8 +14,7 @@ class BookmarkController extends Controller
     public function show()
     {
         $recent = Bookmark::orderBy('time_posted', 'desc')
-                    ->take(10)
-                    ->get();
+                    ->simplePaginate(20);
 
         return view('list')->with(['bookmarks' => $recent]);
     }

@@ -28,5 +28,8 @@
                </article>
             @endforeach
         </section>
+        <section class="pagination">
+            {{ $bookmarks->links() }}
+        </section>
     </body>
 </html>
