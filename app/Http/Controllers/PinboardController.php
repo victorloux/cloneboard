@@ -145,11 +145,46 @@ class PinboardController extends Controller
             // and request bookmarks newer than that
             $latest = \DB::table('bookmarks')->max('time_posted');
             
+            // If there's no latest, then perhaps we shoud run the 
+            // initial import first?
+            if($latest === null) {
+                throw new \Exception("No record in the database yet. Run `artisan import:all` first. After this initial import, bookmarks will be updated incrementally and automatically.");
+                return false;
+            }
+
             \Cache::forever('last_update', time());
             return true;
         }
 
         return false;
+    }
+
+    /**
+     * Gets ALL the records in chunks. Useful for the first run;
+     * after that, we'll update incrementally
+     *
+     * This is accessed via `artisan import:all`
+     * defined in app/Console/Commands/InitialImport.php
+     */
+    public function getAllRecords()
+    {
+        $this->import(null, null, null);
+        
+        // The code below might ever be needed if you have tons of bookmarks.
+        // the 'posts/all' endpoint has a rate limiting of 1 call every 5 minutes
+        // but there's no specific limit given on how many bookmarks are returned
+        // so we might have to chunk results.
+        /*
+        $resultsCount = 0;
+        $offset = null;
+        $limit = 250;
+
+        do {
+            $this->import(null, null, null);
+            $offset += $limit;
+            sleep(310); // avoid rate limit 
+        } while ($resultsCount > 0);
+        */
     }
 
     /**

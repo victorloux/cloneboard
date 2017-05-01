@@ -13,4 +13,5 @@ This is built on top of Laravel. To install you just need to already have PHP 7 
 - Copy `.env.example.php` into `.env` and modify the database details and your Pinboard username & token (what's after the colon)
 - `php artisan migrate:install && php artisan migrate:refresh` to set up your database
 - Get a server to point to the public/ directory (follow Laravel instructions depending on your server)
+- If all is configured correctly, you should get a message telling you to do the initial import. Run `php artisan import:all`, this can take a few minutes. This is only for the initial import; after that, all updates will be incremental.
 - It should work!
