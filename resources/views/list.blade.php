@@ -8,7 +8,10 @@
         <title>Victor Loux — bookmarks</title>
     </head>
     <body>
-       <section class="bookmarks">
+        @if(isset($tagName))
+            <h2>Bookmarks tagged <strong>{{ $tagName }}</strong></h2>
+        @endif
+        <section class="bookmarks">
            @foreach($bookmarks as $bookmark)
                <article>
                     <h3><a href="{{ $bookmark->url }}">{{ $bookmark->title }}</a></h3>

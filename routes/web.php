@@ -12,3 +12,5 @@
 */
 
 Route::get('/', 'BookmarkController@show');
+
+Route::get('/tag/{tag}', 'BookmarkController@showTag');

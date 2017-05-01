@@ -18,4 +18,18 @@ class BookmarkController extends Controller
 
         return view('list')->with(['bookmarks' => $recent]);
     }
+    
+    /**
+     * Fetches results for a single tag page and populates a view with the results
+     */
+    public function showTag($tag = null)
+    {
+        $tagged = Bookmark::whereHas('tags', function ($query) use ($tag) {
+                        $query->where('tag', '=', $tag);
+                    })
+                    ->orderBy('time_posted', 'desc')
+                    ->simplePaginate(20);
+
+        return view('list')->with(['bookmarks' => $tagged, 'tagName' => $tag]);
+    }
 }
