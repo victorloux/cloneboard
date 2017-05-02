@@ -1,6 +1,6 @@
 <article>
     <aside>
-        <time>{{ $bookmark->time_posted->diffForHumans() }}</time>
+        <time title="{{ $bookmark->time_posted->format("j F Y H:i") }}">{{ $bookmark->time_posted->diffForHumans() }}</time>
     </aside>
     
     <div class="definition">
