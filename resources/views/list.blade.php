@@ -8,7 +8,7 @@
         <title>Victor Loux — bookmarks</title>
     </head>
     <body>
-        <form action="{{ action("BookmarkController@search") }}" id="search" method="POST">
+        <form action="{{ action("BookmarkController@searchForm") }}" id="search" method="POST">
             <input type="text" name="query" value="{{ old('query') }}">
             <input type="submit" name="search" value="search">
             {{ csrf_field() }}

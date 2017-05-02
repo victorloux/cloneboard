@@ -33,13 +33,20 @@ class BookmarkController extends Controller
         return view('list')->with(['bookmarks' => $tagged, 'tagName' => $tag]);
     }
     
-    public function search(Request $request)
+    public function searchForm(Request $request)
     {
         if(!$request->has('query')) {
             return redirect()->route('index');
         }
-
-        $query = $request->input('query');
+        
+        return redirect()->route('search', ['query' => $request->input('query') ]);
+    }
+    
+    public function search(Request $request, $query)
+    {
+        if(!$query) {
+            return redirect()->route('index');
+        }
 
         $queryBuilder = Bookmark::whereHas('tags', function ($q) use ($query) {
                         $q->where('tag', 'like', '%' . $query . '%');
