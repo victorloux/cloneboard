@@ -14,7 +14,7 @@ class BookmarkController extends Controller
     public function show()
     {
         $recent = Bookmark::orderBy('time_posted', 'desc')
-                    ->simplePaginate(20);
+                    ->simplePaginate(config('view.items_per_page'));
 
         return view('list')->with(['bookmarks' => $recent]);
     }
@@ -28,7 +28,7 @@ class BookmarkController extends Controller
                         $query->where('tag', '=', $tag);
                     })
                     ->orderBy('time_posted', 'desc')
-                    ->simplePaginate(20);
+                    ->simplePaginate(config('view.items_per_page'));
 
         return view('list')->with(['bookmarks' => $tagged, 'tagName' => $tag]);
     }
@@ -50,7 +50,7 @@ class BookmarkController extends Controller
                     ->orderBy('time_posted', 'desc');
 
         $count = $queryBuilder->get()->count();
-        $results = $queryBuilder->simplePaginate(20);
+        $results = $queryBuilder->simplePaginate(config('view.items_per_page'));
 
         return view('list')->with([
             'bookmarks'    => $results,

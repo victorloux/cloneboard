@@ -29,5 +29,10 @@ return [
     */
 
     'compiled' => realpath(storage_path('framework/views')),
+    
+    /*
+     | Default number of bookmarks to show
+     */
+    'items_per_page' => env('ITEMS_PER_PAGE', 20),
 
 ];
