@@ -37,15 +37,18 @@
         @elseif(isset($query))
             <h2>{{ $resultsCount }} results for “<strong>{{ $query }}</strong>”</h2>
         @endif
+        
+        @if($bookmarks->currentPage() > 1)
+            {{ $bookmarks->links() }}
+        @endif
 
         <section class="cv bookmarks">
            @foreach($bookmarks as $bookmark)
                @include("bookmark")
             @endforeach
         </section>
-        <section class="pagination">
-            {{ $bookmarks->links() }}
-        </section>
+
+        {{ $bookmarks->links() }}
         
         <section class="extra">
             <p>{{ number_format($totalBookmarks) }} bookmarks total &middot; Imported from <a href="https://pinboard.in/u:vloux">Pinboard</a></p>
