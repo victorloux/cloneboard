@@ -11,6 +11,8 @@
 |
 */
 
-Route::get('/', 'BookmarkController@show');
+Route::get('/', 'BookmarkController@show')->name('index');
 
-Route::get('/tag/{tag}', 'BookmarkController@showTag');
+Route::get('/tag/{tag}', 'BookmarkController@showTag')->name('tag');
+
+Route::post('/search', 'BookmarkController@search')->name('search');

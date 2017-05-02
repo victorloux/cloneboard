@@ -8,9 +8,19 @@
         <title>Victor Loux — bookmarks</title>
     </head>
     <body>
+        <form action="{{ action("BookmarkController@search") }}" id="search" method="POST">
+            <input type="text" name="query" value="{{ old('query') }}">
+            <input type="submit" name="search" value="search">
+            {{ csrf_field() }}
+        </form>
+
         @if(isset($tagName))
             <h2>Bookmarks tagged <strong>{{ $tagName }}</strong></h2>
+        @elseif(isset($query))
+            <h2>Searching for “<strong>{{ $query }}</strong>”</h2>
+            <p>{{ $resultsCount }} results.</p>
         @endif
+
         <section class="bookmarks">
            @foreach($bookmarks as $bookmark)
                <article>

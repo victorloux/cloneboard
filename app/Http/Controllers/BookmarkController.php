@@ -32,4 +32,30 @@ class BookmarkController extends Controller
 
         return view('list')->with(['bookmarks' => $tagged, 'tagName' => $tag]);
     }
+    
+    public function search(Request $request)
+    {
+        if(!$request->has('query')) {
+            return redirect()->route('index');
+        }
+
+        $query = $request->input('query');
+
+        $queryBuilder = Bookmark::whereHas('tags', function ($q) use ($query) {
+                        $q->where('tag', 'like', '%' . $query . '%');
+                    })
+                    ->orWhere('title', 'like', '%' . $query . '%')
+                    ->orWhere('description', 'like', '%' . $query . '%')
+                    ->orWhere('url', 'like', '%' . $query . '%')
+                    ->orderBy('time_posted', 'desc');
+
+        $count = $queryBuilder->get()->count();
+        $results = $queryBuilder->simplePaginate(20);
+
+        return view('list')->with([
+            'bookmarks'    => $results,
+            'query'        => $query,
+            'resultsCount' => $count
+        ]);
+    }
 }
