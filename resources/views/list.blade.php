@@ -15,7 +15,13 @@
     </head>
     <body>
         <header>
-            <h1><a href="/">Victor Loux</a> <span class="separator">&rarr;</span> Bookmarks</h1>
+            <h1><a href="/">Victor Loux</a> <span class="separator">&rarr;</span>
+                @if(isset($tagName) || isset($query))
+                    <a href="/bookmarks/">Bookmarks</a>
+                @else
+                    Bookmarks
+                @endif
+            </h1>
         </header>
         
         <section class="intro">
