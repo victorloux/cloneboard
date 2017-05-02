@@ -33,9 +33,17 @@
 
 
         @if(isset($tagName))
-            <h2>{{ $resultsCount }} {{ str_plural("bookmark", $resultsCount) }} tagged “<strong>{{ $tagName }}</strong>”</h2>
+            @if($resultsCount == 0)
+                <h2>No results for {{ $tagName }}!</h2>
+            @else
+                <h2>{{ $resultsCount }} {{ str_plural("bookmark", $resultsCount) }} tagged “<strong>{{ $tagName }}</strong>”</h2>
+            @endif
         @elseif(isset($query))
-            <h2>{{ $resultsCount }} {{ str_plural("result", $resultsCount) }} results for “<strong>{{ $query }}</strong>”</h2>
+            @if($resultsCount == 0)
+                <h2>No results for {{ $query }}!</h2>
+            @else
+                <h2>{{ $resultsCount }} {{ str_plural("result", $resultsCount) }} results for “<strong>{{ $query }}</strong>”</h2>
+            @endif
         @endif
         
         @if($bookmarks->currentPage() > 1)
