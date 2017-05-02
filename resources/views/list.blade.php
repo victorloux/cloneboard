@@ -33,9 +33,9 @@
 
 
         @if(isset($tagName))
-            <h2>{{ $resultsCount }} bookmarks tagged “<strong>{{ $tagName }}</strong>”</h2>
+            <h2>{{ $resultsCount }} {{ str_plural("bookmark", $resultsCount) }} tagged “<strong>{{ $tagName }}</strong>”</h2>
         @elseif(isset($query))
-            <h2>{{ $resultsCount }} results for “<strong>{{ $query }}</strong>”</h2>
+            <h2>{{ $resultsCount }} {{ str_plural("result", $resultsCount) }} results for “<strong>{{ $query }}</strong>”</h2>
         @endif
         
         @if($bookmarks->currentPage() > 1)
