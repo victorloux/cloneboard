@@ -16,6 +16,7 @@ class BookmarkController extends Controller
         $recent = Bookmark::orderBy('time_posted', 'desc')
                     ->simplePaginate(config('view.items_per_page'));
 
+        $recent->withPath(config('app.url'));
         return view('list')->with(['bookmarks' => $recent]);
     }
     
