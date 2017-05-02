@@ -24,13 +24,20 @@ class BookmarkController extends Controller
      */
     public function showTag($tag = null)
     {
-        $tagged = Bookmark::whereHas('tags', function ($query) use ($tag) {
+        $queryBuilder = Bookmark::whereHas('tags', function ($query) use ($tag) {
                         $query->where('tag', '=', $tag);
                     })
-                    ->orderBy('time_posted', 'desc')
-                    ->simplePaginate(config('view.items_per_page'));
+                    ->orderBy('time_posted', 'desc');
 
-        return view('list')->with(['bookmarks' => $tagged, 'tagName' => $tag]);
+        $count = $queryBuilder->get()->count();
+        $tagged = $queryBuilder->simplePaginate(config('view.items_per_page'));
+
+
+        return view('list')->with([
+            'bookmarks' => $tagged,
+            'tagName'   => $tag,
+            'resultsCount' => $count
+        ]);
     }
     
     public function searchForm(Request $request)

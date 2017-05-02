@@ -33,7 +33,7 @@
 
 
         @if(isset($tagName))
-            <h2>Bookmarks tagged <strong>{{ $tagName }}</strong></h2>
+            <h2>{{ $resultsCount }} bookmarks tagged “<strong>{{ $tagName }}</strong>”</h2>
         @elseif(isset($query))
             <h2>{{ $resultsCount }} results for “<strong>{{ $query }}</strong>”</h2>
         @endif
