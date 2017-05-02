@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Cache;
 use \kijin\PinboardAPI as PinboardAPI;
 use Carbon\Carbon;
 
@@ -154,6 +155,7 @@ class PinboardController extends Controller
 
         $latest = Carbon::parse($latest);
         $new = $this->import($latest);
+        $this->updateFullCount();
         return count($new);
     }
 
@@ -170,6 +172,16 @@ class PinboardController extends Controller
     public function fullUpdate($offset = null)
     {
         $new = $this->import(null, $offset);
+        $this->updateFullCount();
         return count($new);
+    }
+    
+    /**
+     * Updates the cached total number of bookmarks
+     */
+    protected function updateFullCount()
+    {
+        $total = Bookmark::count();
+        Cache::forever('totalBookmarks', $total);
     }
 }
