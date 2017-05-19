@@ -1,11 +1,12 @@
-<article>
-    <aside>
-        <time title="{{ $bookmark->time_posted->format("j F Y H:i") }}">{{ $bookmark->time_posted->diffForHumans() }}</time>
+<article class="row">
+    <aside class="two columns aside">
+        <time datetime="{{ $bookmark->time_posted->format("j F Y H:i") }}" title="{{ $bookmark->time_posted->format("j F Y H:i") }}">{{ $bookmark->time_posted->diffForHumans() }}</time>
     </aside>
     
-    <div class="definition">
+    <div class="eight columns definition">
         <h4><a href="{{ $bookmark->url }}">{{ $bookmark->title }}</a></h4>
-        <h5><a href="{{ $bookmark->url }}"><strong>{{ $bookmark->rootUrl }}</strong>{{ parse_url($bookmark->url, PHP_URL_PATH) }}</a></h5>
+
+        <a href="{{ $bookmark->url }}" class="link"><strong>{{ $bookmark->rootUrl }}</strong>{{ parse_url($bookmark->url, PHP_URL_PATH) }}</a>
 
         @if(!empty($bookmark->description))
             <p class="details">
