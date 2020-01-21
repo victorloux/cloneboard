@@ -15,6 +15,24 @@
             @endif
         </title>
         
+        <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let curr = -1;
+            let links = document.querySelectorAll('.definition > a');
+            let max = links.length - 1;
+            document.addEventListener("keyup", function(ev) {
+                if(ev.key == 'j') {
+                    if(curr == max) return;
+                    curr++;
+                    links[curr].focus();
+                } else if (ev.key == 'k') {
+                    if(curr <= 0) return;
+                    curr--;
+                    links[curr].focus();
+                }
+            });
+        });
+        </script>
         {{-- <script type="text/javascript">
             document.addEventListener("DOMContentLoaded", function() {
                 class list {
@@ -61,9 +79,16 @@
                         <a href="/bookmarks/">Bookmarks</a>
                         <span class="separator">&rarr;</span>
                         @if(isset($tagName))
-                            <i data-feather="tag"><span class="sr-only">Tag</span></i> {{ $tagName }}
+                            <svg class="feather" viewBox="0 0 24 24">
+                                <title>Tag:</title>
+                              <use xlink:href="{{ env("SVG_ROOT", "/feather-sprite.svg") }}#tag"/>
+                            </svg>
+                            {{ $tagName }}
                         @elseif(isset($query))
-                            <i data-feather="search"></i> Search: “{{ $query }}”
+                            <svg class="feather" viewBox="0 0 24 24" aria-hidden="true">
+                              <use xlink:href="{{ env("SVG_ROOT", "/feather-sprite.svg") }}#search"/>
+                            </svg>
+                            Search: “{{ $query }}”
                         @endif
                     @else
                         Bookmarks
@@ -105,18 +130,11 @@
                 @endforeach
             </main>
 
-            <div class="row eight columns offset-by-two">{{ $bookmarks->links() }}</div>
+            <div class="row eight columns offset-by-two" role="nav" aria-label="Pagination">{{ $bookmarks->links() }}</div>
             
             <footer>
                 {{ number_format($totalBookmarks) }} bookmarks total &middot; Imported from <a href="https://pinboard.in/u:vloux">Pinboard</a>
             </footer>
         </div>
-        
-        {{-- @TODO: should probably just use real SVGs. --}}
-        <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-        <script>
-          feather.replace()
-        </script>
-
     </body>
 </html>
