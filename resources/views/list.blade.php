@@ -110,7 +110,7 @@
                     @endif
                 @else
                     A feed of <strong>interesting articles and websites</strong> I have recently read.
-                    Please feel free to browse and <a href="mailto:io@victorloux.uk">send me suggestions</a> of sites to look at — I’m curious about a lot of things!
+                    Check out my <a href="/newsletter/">newsletter</a> for a digest of the best!
                 @endif
                 </p>
                 

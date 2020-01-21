@@ -21,7 +21,8 @@
         @if(count($bookmark->tags) > 1)
             <ul class="tags">
                 <li><svg class="feather" aria-hidden="true">
-                  <use xlink:href="{{ env("SVG_ROOT", "/feather-sprite.svg") }}#tag"/>
+                    <title>Tag:</title>
+                    <use xlink:href="{{ env("SVG_ROOT", "/feather-sprite.svg") }}#tag"/>
                 </svg></li>
                 @foreach($bookmark->tags as $tag)
                     <?php if($tag == 'via:popular') continue; ?>
